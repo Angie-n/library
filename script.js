@@ -14,9 +14,12 @@ function addBookToLibrary() {
         bookDiv.classList.add("book-div");
         let bookCover = document.createElement("div");
         bookCover.classList.add("book-cover");
+        let bookShelf = document.createElement("div");
+        bookInfo.classList.add("book-shelf");
         let bookInfo = document.createElement("div");
         bookInfo.classList.add("book-info");
         bookDiv.appendChild(bookCover);
+        bookDiv.appendChild(bookShelf);
         bookDiv.appendChild(bookInfo);
         bookHolder.insertBefore(bookDiv, document.querySelector("#add-book-btn"));
     }); 

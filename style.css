@@ -8,10 +8,14 @@ body {
     height: 100vh;
     width: 100vw;
     position: fixed;
+    background-color: rgb(26, 21, 21);
+    color: white;
 }
 
 header {
+    padding-top: 15px;
     margin-left: 10px;
+    text-align: center;
 }
 
 h1 {
@@ -25,9 +29,44 @@ header p {
     margin: 0;
 }
 
+#book-holder {
+    display: flex;
+    margin: auto;
+    width: 90%;
+    border: 20px solid rgb(17, 15, 15);
+    border-radius: 1%;
+    background-color: rgb(10, 9, 9);
+}
+
+.book-div {
+    display: flex;
+    flex-direction: column;
+}
+
 .book-cover {
     width: 150px;
     height: 200px;
+    margin: 18px;
+}
+
+.book-cover:hover {
+    box-shadow: 0 0 5px 3px white;
+}
+
+.book-shelf {
+    width: 91vw;
+    height: 10px;
+    margin: -7px;
+    background-color: rgb(17, 15, 15);
+    box-shadow: 2px -10px rgb(36, 34, 33);
+    transform: skew(-20deg);
+}
+
+#add-book-btn {
+    background: linear-gradient(45deg, rgb(2, 19, 252), rgb(219, 11, 185));
+    color: white;
+    font-size: 100px;
+    border: blue;
 }
 
 form {

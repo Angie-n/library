@@ -1,0 +1,45 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <title>Library</title>
+        <link rel="stylesheet" href="style.css">
+        <script src="script.js" defer></script>
+        <meta name="viewport" content="width=device-width, initial-scale=1">
+    </head>
+    <body>
+        <div id="blurred-background">
+            <header>
+                <h1>Library</h1>
+                <p>Keep track of your literary adventures</p>
+            </header>
+            <main>
+                <div id="book-holder">
+                    <button id="add-book-btn" class="book-cover">+</button>
+                </div>
+            </main>
+        </div>
+        <form action="#">
+            <div id="form-header">
+                <h2>NEW BOOK INFO</h2>
+                <button id="cancel-btn">x</button>
+            </div>
+            <div class="label-input">
+                <label for="btitle">Title:</label> 
+                <input type="text" id="btitle" name="btitle">
+            </div>
+            <div class="label-input">
+                <label for="bauthor">Author:</label> 
+                <input type="text" id="bauthor" name="bauthor">
+            </div>
+            <div class="label-input">
+                <label for="bpages">Pages:</label> 
+                <input type="number" id="bpages" name="bpages" min="1">
+            </div>
+            <div class="label-input">
+                <label for="bfinished">Finished</label> 
+                <input type="checkbox" id="bfinished" name="bfinished">
+            </div>
+            <button type="submit" id="form-submit-btn">Add to Collection</button>
+        </form>
+    </body>
+</html>

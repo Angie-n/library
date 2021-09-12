@@ -14,35 +14,63 @@
             </header>
             <main>
                 <div id="book-holder">
-                    <div class="book-div">
+                    <div id="add-book-div" class="book-div">
                         <button id="add-book-btn" class="book-cover">+</button>
                         <div class="book-shelf"></div>
                     </div>
                 </div>
             </main>
         </div>
-        <form action="#">
+        <div id="block-other-elements"></div>
+        <form id="new-book-form" class="info-sheet">
             <div id="form-header">
                 <h2>NEW BOOK INFO</h2>
-                <button id="cancel-btn">x</button>
+                <button id="cancel-form-btn" class="cancel-btn" type="button">x</button>
             </div>
             <div class="label-input">
                 <label for="btitle">Title:</label> 
-                <input type="text" id="btitle" name="btitle">
+                <input type="text" id="btitle" name="btitle" required>
             </div>
             <div class="label-input">
                 <label for="bauthor">Author:</label> 
-                <input type="text" id="bauthor" name="bauthor">
+                <input type="text" id="bauthor" name="bauthor" required>
             </div>
             <div class="label-input">
                 <label for="bpages">Pages:</label> 
-                <input type="number" id="bpages" name="bpages" min="1">
+                <input type="number" id="bpages" name="bpages" min="1" required>
             </div>
             <div class="label-input">
                 <label for="bfinished">Finished</label> 
                 <input type="checkbox" id="bfinished" name="bfinished">
             </div>
+            <div class="label-input">
+                <label for="bCover">Cover url:</label> 
+                <input type="url" id="bcover" name="bcover" placeholder="(Optional)">
+            </div>
             <button type="submit" id="form-submit-btn">Add to Collection</button>
         </form>
+        <div id="book-info" class="info-sheet">
+            <div id="info-header">
+                <h2>BOOK INFO</h2>
+                <button id="exit-info-btn" class="cancel-btn" type="button">x</button>
+            </div>
+            <div id="title-section" class="info-section">
+                <h3>Title:</h3>
+                <p id="title-info"></p>
+            </div>
+            <div id="author-section" class="info-section">
+                <h3>Author:</h3>
+                <p id="author-info"></p>
+            </div>
+            <div id="pages-section" class="info-section">
+                <h3>Pages:</h3>
+                <p id="pages-info"></p>
+            </div>
+            <div id="status-section" class="info-section">
+                <h3>Status:</h3>
+                <p id="status-info"></p>
+            </div>
+            <button id="delete-entry-btn"><b>DELETE ENTRY</b></button>
+        </div>
     </body>
 </html>

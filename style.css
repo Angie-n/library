@@ -228,6 +228,20 @@ h3 {
     text-overflow: ellipsis;
 }
 
+#toggle-status-btn {
+    position: relative;
+    left: 150px;
+    top: -5px;
+    background-color: transparent;
+    border: none;
+    font-size: 18px;
+    color: rgb(107, 31, 12);
+}
+
+#toggle-status-btn:hover {
+    color: rgb(179, 102, 51);
+}
+
 #exit-info-btn {
     position: absolute;
     bottom: 185px;

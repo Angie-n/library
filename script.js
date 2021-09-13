@@ -30,12 +30,16 @@ function abbTitle() {
     return titleAbbArr.join("");
 }
 
+function changeCoverColor(bookCover) {
+    let coverColor;
+    if(newBook.haveRead === "Completed") coverColor = "rgb(7, 102, 27)";
+    else coverColor = "rgb(143, 13, 13)";
+    bookCover.style.backgroundColor = `${coverColor}`;
+}
+
 function styleBookCover(bookCover) {
     if (newBook.cover === "") {
-        let coverColor;
-        if(newBook.haveRead === "Completed") coverColor = "rgb(7, 102, 27)";
-        else coverColor = "rgb(143, 13, 13)";
-        bookCover.style.backgroundColor = `${coverColor}`;
+        changeCoverColor(bookCover);
 
         let titleP = document.createElement("p");
         let authorP = document.createElement("p");
@@ -161,6 +165,19 @@ document.getElementById("delete-entry-btn").addEventListener("click", e => {
     document.getElementById("block-other-elements").style.zIndex = "-1";
     document.getElementById("book-info").style.display = "none";
 })
+
+function reverseStatus() {
+    let currentBook = userLibrary[bookIndex];
+    if (currentBook.haveRead === "Completed") currentBook.haveRead = "In Progress";
+    else currentBook.haveRead = "Completed";
+    document.getElementById("status-info").textContent = `${currentBook.haveRead}`;
+}
+
+document.getElementById("toggle-status-btn").addEventListener("click", e => {
+    findCurrentBook();
+    reverseStatus();
+    changeCoverColor(document.getElementsByClassName("book-cover")[bookIndex]);
+});
 
 let form = document.getElementById("new-book-form");
 

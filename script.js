@@ -1,6 +1,6 @@
 let userLibrary = [];
-let form = document.getElementById("new-book-form");
 let newBook;
+document.getElementById("add-book-div").setAttribute("data-arrPos", "0");
 
 function Book(title, author, numPages, haveRead, cover) {
     this.title = title;
@@ -22,19 +22,33 @@ function addBookToList() {
     userLibrary.push(newBook);
 }
 
-function addBookCover(bookCover) {
+function abbTitle() {
+    let titleArr = newBook.title.split(" ");
+        let titleAbbArr = titleArr.map(word => {
+            return word.substring(0,1);
+        });
+    return titleAbbArr.join("");
+}
+
+function styleBookCover(bookCover) {
     if (newBook.cover === "") {
         let coverColor;
         if(newBook.haveRead === "Completed") coverColor = "rgb(7, 102, 27)";
         else coverColor = "rgb(143, 13, 13)";
-
-        let titleArr = newBook.title.split(" ");
-        let titleAbbArr = titleArr.map(word => {
-            return word.substring(0,1);
-        });
-        let coverTitle = titleAbbArr.join("");
         bookCover.style.backgroundColor = `${coverColor}`;
-        bookCover.textContent = `${coverTitle}`;
+
+        let titleP = document.createElement("p");
+        let authorP = document.createElement("p");
+        titleP.classList.add("cover-title");
+        authorP.classList.add("cover-author");
+        if(newBook.title.length < 50) titleP.textContent = `${newBook.title}`;
+        else {
+            let titleAbb = abbTitle();
+            titleP.textContent = titleAbb;
+        }
+        authorP.textContent = `${newBook.author}`;
+        bookCover.append(titleP);
+        bookCover.append(authorP);
     }
     else {
         bookCover.style.background = `url("${newBook.cover}")`;
@@ -42,27 +56,49 @@ function addBookCover(bookCover) {
     }
 }
 
-function displayCover(bookDiv, bookCover, bookInfo) {
+function addCoverToDOM(bookDiv, bookCover) {
     bookDiv.classList.add("book-div");
     bookCover.classList.add("book-cover");
     bookDiv.append(bookCover);
     document.querySelector("#book-holder").insertBefore(bookDiv, document.querySelector("#add-book-div"));
 }
 
-function displayBookInfo() {
+function displayBookInfo(currentBook) {
     document.getElementById("book-info").style.display = "block";
     document.getElementById("blurred-background").style.filter = "blur(5px)";
     document.getElementById("block-other-elements").style.zIndex = "0";
-    document.getElementById("title-info").textContent = `${newBook.title}`;
-    document.getElementById("author-info").textContent = `${newBook.author}`;
-    document.getElementById("pages-info").textContent = `${newBook.numPages}`;
-    document.getElementById("status-info").textContent = `${newBook.haveRead}`;
+    document.getElementById("title-info").textContent = `${currentBook.title}`;
+    document.getElementById("author-info").textContent = `${currentBook.author}`;
+    document.getElementById("pages-info").textContent = `${currentBook.numPages}`;
+    document.getElementById("status-info").textContent = `${currentBook.haveRead}`;
 }
 
 function addClickEvent(bookDiv) {
+    bookDiv.setAttribute("data-arrPos", `${userLibrary.length - 1}`);
+    document.getElementById("add-book-div").setAttribute("data-arrPos", `${userLibrary.length}`);
     bookDiv.addEventListener("click", e => {
-        displayBookInfo();
+        let currentBook = userLibrary[parseInt(bookDiv.getAttribute("data-arrPos"))];
+        displayBookInfo(currentBook);
     })
+}
+
+let bookDivs;
+let windowLength;
+let coverLength;
+let booksPerRow;
+
+function resizeShelf() {
+    bookDivs = document.getElementsByClassName("book-div");
+    windowLength = window.innerWidth * 0.9;
+    coverLength = document.getElementById("add-book-div").offsetWidth;
+    booksPerRow = Math.floor(windowLength/coverLength);
+    for (let i = 0; i < bookDivs.length; i++) {
+        let nthPos = bookDivs[i].getAttribute("data-arrPos");
+        let frAfterFb = false;
+        if(nthPos < booksPerRow && nthPos != 0) frAfterFb = true;
+        if (nthPos % booksPerRow === 0 && !frAfterFb && bookDivs[i].childElementCount === 1) addShelfDiv(bookDivs[i]);
+        else if((nthPos % booksPerRow !== 0 || frAfterFb) && bookDivs[i].childElementCount > 1) bookDivs[i].removeChild(bookDivs[i].children[1]);
+    }
 }
 
 function addBookToLibrary() {
@@ -70,9 +106,10 @@ function addBookToLibrary() {
     let bookCover = document.createElement("div");
 
     addBookToList();
-    addBookCover(bookCover);
-    displayCover(bookDiv, bookCover);
+    styleBookCover(bookCover);
+    addCoverToDOM(bookDiv, bookCover);
     addClickEvent(bookDiv);
+    resizeShelf();
 }
 
 document.getElementById("add-book-btn").addEventListener("click", e => {
@@ -93,6 +130,40 @@ document.getElementById("exit-info-btn").addEventListener("click", e => {
     document.getElementById("book-info").style.display = "none";
 });
 
+let bookIndex; 
+
+function findCurrentBook() {
+    userLibrary.forEach((book, index) => {
+        if(book.title === document.getElementById("title-info").textContent &&
+        book.author === document.getElementById("author-info").textContent &&
+        book.numPages === document.getElementById("pages-info").textContent &&
+        book.haveRead === document.getElementById("status-info").textContent) {
+            bookIndex = index;
+        }
+    })
+}
+
+function deleteCurrentBook() {
+    userLibrary.splice(bookIndex, 1);
+    document.getElementById("book-holder").removeChild(document.getElementsByClassName("book-div")[bookIndex]);
+    let bookDivs = document.getElementsByClassName("book-div");
+    for (let i = bookIndex; i < bookDivs.length; i++) {
+        let currentArrPos = bookDivs[i].getAttribute("data-arrPos");
+        bookDivs[i].setAttribute("data-arrPos", `${currentArrPos - 1}`);
+    }
+}
+
+document.getElementById("delete-entry-btn").addEventListener("click", e => {
+    findCurrentBook();
+    deleteCurrentBook();
+    resizeShelf();
+    document.getElementById("blurred-background").style.filter = "none";
+    document.getElementById("block-other-elements").style.zIndex = "-1";
+    document.getElementById("book-info").style.display = "none";
+})
+
+let form = document.getElementById("new-book-form");
+
 form.onsubmit = (e => {
     e.preventDefault();
     addBookToLibrary();
@@ -102,6 +173,15 @@ form.onsubmit = (e => {
     document.getElementById("block-other-elements").style.zIndex = "-1";
 });
 
-window.addEventListener("resize", e => {
+function addShelfDiv(parentNode) {
+    let shelfPosDiv = document.createElement("div");
+    let shelfDiv = document.createElement("div");
+    shelfPosDiv.classList.add("book-shelf-positioning");
+    shelfDiv.classList.add("book-shelf");
+    shelfPosDiv.appendChild(shelfDiv);
+    parentNode.appendChild(shelfPosDiv);
+}
 
+window.addEventListener("resize", e => {
+    resizeShelf();
 });

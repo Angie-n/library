@@ -17,6 +17,7 @@ body {
     position: fixed;
     background-color: rgb(26, 21, 21);
     color: white;
+    overflow-y: auto;
 }
 
 header {
@@ -52,19 +53,43 @@ header p {
 
 .book-cover {
     display: flex;
+    flex-direction: column;
     justify-content: center;
     align-items: center;
+    flex-wrap: wrap;
+    box-shadow: inset 15px 0px 50px black, inset -5px 3px white, 3px -1.5px 1px rgb(31, 31, 31);
     width: 150px;
     height: 200px;
     font-size: 20px;
     margin: 18px;
+    border-radius: 2%;
 }
 
 .book-cover:hover {
-    box-shadow: 0 0 5px 3px white;
+    box-shadow: inset 0px 0px 10px 1px rgb(34, 31, 31), inset -5px 3px white, 3px -1.5px 1px rgb(31, 31, 31), 0 0 3px 2px rgb(255, 255, 255);
+}
+
+.cover-title {
+    height: 30px;
+    font-size: 15px;
+    max-width: 140px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+}
+
+.cover-author {
+    max-width: 140px;
+    position: relative;
+    top: 50px;
+    font-size: 10px;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
 }
 
 .book-shelf {
+    position: absolute;
     width: 91vw;
     height: 10px;
     margin: -7px;
@@ -73,11 +98,20 @@ header p {
     transform: skew(-20deg);
 }
 
+.book-shelf-positioning {
+    width: 5px;
+}
+
 #add-book-btn {
     background: linear-gradient(45deg, rgb(2, 19, 252), rgb(219, 11, 185));
+    box-shadow: none;
     color: white;
     font-size: 100px;
     border: blue;
+}
+
+#add-book-btn:hover {
+    box-shadow: 0 0 3px 2px rgb(255, 255, 255);
 }
 
 .info-sheet {

@@ -146,10 +146,13 @@ header p {
     font-size: 20px;
     margin: 18px;
     border-radius: 2%;
+    border: none;
+    color: white;
+    font: inherit;
 }
 
 .book-cover:hover {
-    box-shadow: inset 0px 0px 10px 1px rgb(34, 31, 31), inset -5px 3px white, 3px -1.5px 1px rgb(31, 31, 31), 0 0 3px 2px rgb(255, 255, 255);
+    box-shadow: inset 0px 0px 10px 1px rgb(34, 31, 31), inset -5px 3px white, 3px -1.5px 1px rgb(31, 31, 31), 0 0 3px 2px rgb(255, 255, 255);;
 }
 
 .cover-title {

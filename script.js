@@ -9,7 +9,7 @@ function retrieveStorage() {
     let booksToBeAdded = JSON.parse(localStorage.getItem("userLibrary"));
     booksToBeAdded.forEach((book, index) => {
         let bookDiv = document.createElement("div");
-        let bookCover = document.createElement("div");
+        let bookCover = document.createElement("button");
 
         newBook = new Book(book.title, book.author, book.numPages, book.haveRead, book.cover);
         userLibrary.push(newBook);
@@ -125,7 +125,7 @@ function resizeShelf() {
 
 function addBookToLibrary() {
     let bookDiv = document.createElement("div");
-    let bookCover = document.createElement("div");
+    let bookCover = document.createElement("button");
 
     addBookToList();
     styleBookCover(bookCover);

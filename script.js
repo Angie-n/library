@@ -1,6 +1,27 @@
 let userLibrary = [];
 let newBook;
-document.getElementById("add-book-div").setAttribute("data-arrPos", "0");
+let bookDivs;
+let windowLength;
+let coverLength;
+let booksPerRow;
+
+function retrieveStorage() {
+    let booksToBeAdded = JSON.parse(localStorage.getItem("userLibrary"));
+    booksToBeAdded.forEach((book, index) => {
+        let bookDiv = document.createElement("div");
+        let bookCover = document.createElement("div");
+
+        newBook = new Book(book.title, book.author, book.numPages, book.haveRead, book.cover);
+        userLibrary.push(newBook);
+        styleBookCover(bookCover);
+        addCoverToDOM(bookDiv, bookCover);
+        addClickEvent(bookDiv);
+        resizeShelf();
+    });
+}
+
+if(localStorage.getItem("userLibrary")) retrieveStorage();
+else document.getElementById("add-book-div").setAttribute("data-arrPos", "0");
 
 function Book(title, author, numPages, haveRead, cover) {
     this.title = title;
@@ -20,6 +41,7 @@ function addBookToList() {
     let cover = document.getElementById("bcover").value;
     newBook = new Book(title, author, numPages, haveRead, cover);
     userLibrary.push(newBook);
+    localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
 }
 
 function abbTitle() {
@@ -30,16 +52,17 @@ function abbTitle() {
     return titleAbbArr.join("");
 }
 
-function changeCoverColor(bookCover) {
+function changeCoverColor(bookCover, book) {
     let coverColor;
-    if(newBook.haveRead === "Completed") coverColor = "rgb(7, 102, 27)";
+    if(book.haveRead === "Completed") coverColor = "rgb(7, 102, 27)";
     else coverColor = "rgb(143, 13, 13)";
     bookCover.style.backgroundColor = `${coverColor}`;
+    localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
 }
 
 function styleBookCover(bookCover) {
     if (newBook.cover === "") {
-        changeCoverColor(bookCover);
+        changeCoverColor(bookCover, newBook);
 
         let titleP = document.createElement("p");
         let authorP = document.createElement("p");
@@ -86,11 +109,6 @@ function addClickEvent(bookDiv) {
     })
 }
 
-let bookDivs;
-let windowLength;
-let coverLength;
-let booksPerRow;
-
 function resizeShelf() {
     bookDivs = document.getElementsByClassName("book-div");
     windowLength = window.innerWidth * 0.9;
@@ -116,21 +134,28 @@ function addBookToLibrary() {
     resizeShelf();
 }
 
-document.getElementById("add-book-btn").addEventListener("click", e => {
+function blurAndBlock() {
     document.getElementById("blurred-background").style.filter = "blur(5px)";
     document.getElementById("block-other-elements").style.zIndex = "0";
+}
+
+function stopBlurAndBlock() {
+    document.getElementById("blurred-background").style.filter = "none";
+    document.getElementById("block-other-elements").style.zIndex = "-1";
+}
+
+document.getElementById("add-book-btn").addEventListener("click", e => {
+    blurAndBlock();
     document.querySelector("form").style.display = "block";
 });
 
 document.getElementById("cancel-form-btn").addEventListener("click", e => {
-    document.getElementById("blurred-background").style.filter = "none";
-    document.getElementById("block-other-elements").style.zIndex = "-1";
+    stopBlurAndBlock();
     document.querySelector("form").style.display = "none";
 });
 
 document.getElementById("exit-info-btn").addEventListener("click", e => {
-    document.getElementById("blurred-background").style.filter = "none";
-    document.getElementById("block-other-elements").style.zIndex = "-1";
+    stopBlurAndBlock()
     document.getElementById("book-info").style.display = "none";
 });
 
@@ -155,14 +180,14 @@ function deleteCurrentBook() {
         let currentArrPos = bookDivs[i].getAttribute("data-arrPos");
         bookDivs[i].setAttribute("data-arrPos", `${currentArrPos - 1}`);
     }
+    localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
 }
 
 document.getElementById("delete-entry-btn").addEventListener("click", e => {
     findCurrentBook();
     deleteCurrentBook();
     resizeShelf();
-    document.getElementById("blurred-background").style.filter = "none";
-    document.getElementById("block-other-elements").style.zIndex = "-1";
+    stopBlurAndBlock();
     document.getElementById("book-info").style.display = "none";
 })
 
@@ -171,12 +196,13 @@ function reverseStatus() {
     if (currentBook.haveRead === "Completed") currentBook.haveRead = "In Progress";
     else currentBook.haveRead = "Completed";
     document.getElementById("status-info").textContent = `${currentBook.haveRead}`;
+    localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
 }
 
 document.getElementById("toggle-status-btn").addEventListener("click", e => {
     findCurrentBook();
     reverseStatus();
-    changeCoverColor(document.getElementsByClassName("book-cover")[bookIndex]);
+    changeCoverColor(document.getElementsByClassName("book-cover")[bookIndex], userLibrary[bookIndex]);
 });
 
 let form = document.getElementById("new-book-form");
@@ -185,9 +211,8 @@ form.onsubmit = (e => {
     e.preventDefault();
     addBookToLibrary();
     form.reset();
-    document.getElementById("blurred-background").style.filter = "none";
+    stopBlurAndBlock();
     document.querySelector("form").style.display = "none";
-    document.getElementById("block-other-elements").style.zIndex = "-1";
 });
 
 function addShelfDiv(parentNode) {
@@ -201,4 +226,19 @@ function addShelfDiv(parentNode) {
 
 window.addEventListener("resize", e => {
     resizeShelf();
+});
+
+document.getElementById("clear-btn").addEventListener("click", e => {
+    document.getElementById("clear-warning").style.display = "block";
+    blurAndBlock();
+});
+
+document.getElementById("exit-warning-btn").addEventListener("click", e => {
+    document.getElementById("clear-warning").style.display = "none";
+    stopBlurAndBlock();
+});
+
+document.getElementById("clear-confirm-btn").addEventListener("click", e => {
+    localStorage.clear();
+    location.reload();
 });

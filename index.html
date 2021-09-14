@@ -10,6 +10,11 @@
     <body>
         <div id="blurred-background">
             <header>
+                <button id="clear-btn">
+                    <i id="fire" class="fas fa-fire"></i>
+                    <div id="candle-stick"></div>
+                    <div id="candle-pan"></div>
+                </button>
                 <h1>Library</h1>
                 <p>Keep track of your literary adventures</p>
             </header>
@@ -53,7 +58,7 @@
         <div id="book-info" class="info-sheet">
             <div id="info-header">
                 <h2>BOOK INFO</h2>
-                <button id="exit-info-btn" class="cancel-btn" type="button">x</button>
+                <button id="exit-info-btn" class="cancel-btn">x</button>
             </div>
             <div id="title-section" class="info-section">
                 <h3>Title:</h3>
@@ -73,6 +78,15 @@
                 <button id="toggle-status-btn"><i class="fas fa-exchange-alt"></i></button>
             </div>
             <button id="delete-entry-btn"><b>DELETE ENTRY</b></button>
+        </div>
+        <div id="clear-warning" class="info-sheet">
+            <h2>WARNING <br>Erasure Imminent</h2>
+            <button id="exit-warning-btn" class="cancel-btn">x</button>
+            <p>
+                If you proceed with this action, all existing data will be cleared.
+                Be sure no wanted information is lost before committing arson.
+            </p>
+            <button id="clear-confirm-btn">BURN IT ALL</button>
         </div>
     </body>
 </html>

@@ -144,7 +144,7 @@ header p {
     width: 150px;
     height: 200px;
     font-size: 20px;
-    margin: 18px;
+    margin: 10px;
     border-radius: 2%;
     border: none;
     color: white;
@@ -160,8 +160,7 @@ header p {
     font-size: 15px;
     max-width: 140px;
     overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    text-overflow: ellipsis; 
 }
 
 .cover-author {
@@ -171,7 +170,6 @@ header p {
     font-size: 10px;
     overflow: hidden;
     text-overflow: ellipsis;
-    white-space: nowrap;
 }
 
 .book-shelf {
@@ -348,4 +346,47 @@ h3 {
 
 #delete-entry-btn:hover {
     color: rgb(197, 8, 8);
+}
+
+@media screen and (max-width: 420px) {
+    #clear-btn {
+        left: 0;
+    }
+    #fire {
+        font-size: 25px;
+    }
+    #candle-stick {
+        width: 20px;
+        height: 30px;
+    }
+    #candle-pan {
+        width: 40px;
+        height: 10px;
+    }
+    .book-cover {
+        width: 100px;
+        height: 150px;
+    }
+    .cover-title {
+        overflow-wrap: break-word;
+        word-break: break-all;
+    }
+    .cover-author {
+        top: 20px;
+    }
+    .info-sheet {
+        width: 280px;
+    }
+    h2 {
+        width: 280px;
+    }
+    input {
+        width: 150px;
+    }
+    #exit-warning-btn {
+        left: 255px;
+    }
+    #toggle-status-btn {
+        left: 80px;
+    }
 }

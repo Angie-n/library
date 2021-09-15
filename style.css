@@ -108,6 +108,100 @@ header {
     left: 325px;
 }
 
+#sort-btn {
+    position: absolute;
+    top: 35px;
+    right: 4%;
+    border: none;
+    font-family: cursive;
+    font-size: 14px;
+    background-color: transparent;
+    color: rgb(218, 195, 93);
+}
+
+#sort-btn label {
+    font-size: inherit;
+    max-width: 12vw;
+}
+
+#sort-btn select {
+    font-size: inherit;
+    background-color: transparent;
+    color: inherit;
+    border-color: gold;
+    width: 12vw;
+}
+
+#sort-btn:hover {
+    text-shadow: 0px 0px 10px gold;
+}
+
+#sort-btn:hover #top-book {
+    background-color: rgb(133, 1, 133);
+    border: solid 2px rgb(63, 4, 63);
+}
+
+#sort-btn:hover #middle-book {
+    background-color: rgb(182, 5, 5);
+    border: solid 2px rgb(119, 2, 2);
+}
+
+#sort-btn:hover #bottom-book {
+    background-color: green;
+    border: solid 2px rgb(0, 70, 0);
+}
+
+#top-book {
+    width: 10vw;
+    margin-left: 0.8vw;
+    background-color: rgb(182, 5, 5);
+    border: solid 2px rgb(119, 2, 2);
+}
+
+#middle-book {
+    width: 12vw;
+    margin-left: 0.5vw;
+    background-color: green;
+    border: solid 2px rgb(0, 70, 0);
+}
+
+#bottom-book {
+    width: 14vw;
+    background-color: rgb(133, 1, 133);
+    border: solid 2px rgb(63, 4, 63);
+}
+
+.sort-book {
+    display: flex;
+}
+
+.sort-book-body {
+    border-radius: 10%;
+    box-shadow: inset 0 0 4px rgb(0, 0, 0);
+    height: 22px;
+}
+
+.sort-book-pages {
+    position: relative;
+    right: 5px;
+    width: 2vw;
+    height: 22px;
+    background-color: rgb(238, 237, 228);
+    border: solid 2px rgb(119, 117, 100);
+    border-top-left-radius: 20%;
+    border-bottom-left-radius: 20%;
+    box-shadow: inset 0.5vw 0px 5px rgb(161, 149, 149);
+}
+
+.page-line {
+    padding: 0;
+    margin: 5px 0 5px 0;
+    width: 2vw;
+    height: 0.1px;
+    background-color: rgb(184, 183, 179);
+    border: none;
+}
+
 h1 {
     font-size: 55px;
     padding: 0;
@@ -348,20 +442,34 @@ h3 {
     color: rgb(197, 8, 8);
 }
 
+@media screen and (max-width: 500px) {
+    #sort-btn {
+        right: 0;
+    }
+}
+
 @media screen and (max-width: 420px) {
     #clear-btn {
-        left: 0;
+        position: static;
     }
-    #fire {
-        font-size: 25px;
+    #sort-btn {
+        position: relative;
+        left: 20px;
+        top: 20px;
     }
-    #candle-stick {
-        width: 20px;
-        height: 30px;
+    #sort-btn select {
+        width: 110px;
     }
-    #candle-pan {
-        width: 40px;
-        height: 10px;
+    #top-book {
+        width: 70px;
+    }
+    
+    #middle-book {
+        width: 90px;
+    }
+    
+    #bottom-book {
+        width: 120px;
     }
     .book-cover {
         width: 100px;

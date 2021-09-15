@@ -4,14 +4,19 @@ let bookDivs;
 let windowLength;
 let coverLength;
 let booksPerRow;
+let sortBy = "dateAdded";
 
 function retrieveStorage() {
+    if(localStorage.getItem("sortBy")) {
+        sortBy = localStorage.getItem("sortBy");
+        document.getElementById(sortBy).setAttribute("selected", "selected");
+    }
     let booksToBeAdded = JSON.parse(localStorage.getItem("userLibrary"));
     booksToBeAdded.forEach((book, index) => {
         let bookDiv = document.createElement("div");
         let bookCover = document.createElement("button");
 
-        newBook = new Book(book.title, book.author, book.numPages, book.haveRead, book.cover);
+        newBook = new Book(book.title, book.author, book.numPages, book.haveRead, book.cover, book.dateAdded);
         userLibrary.push(newBook);
         styleBookCover(bookCover);
         addCoverToDOM(bookDiv, bookCover);
@@ -23,12 +28,13 @@ function retrieveStorage() {
 if(localStorage.getItem("userLibrary")) retrieveStorage();
 else document.getElementById("add-book-div").setAttribute("data-arrPos", "0");
 
-function Book(title, author, numPages, haveRead, cover) {
+function Book(title, author, numPages, haveRead, cover, dateAdded) {
     this.title = title;
     this.author = author;
     this.numPages = numPages;
     this.haveRead = haveRead;
     this.cover = cover;
+    this.dateAdded = dateAdded;
 }
 
 function addBookToList() {
@@ -39,7 +45,8 @@ function addBookToList() {
     if(document.getElementById("bfinished").checked) haveRead = "Completed";
     else haveRead = "In Progress";
     let cover = document.getElementById("bcover").value;
-    newBook = new Book(title, author, numPages, haveRead, cover);
+    let dateAdded = new Date();
+    newBook = new Book(title, author, numPages, haveRead, cover, dateAdded);
     userLibrary.push(newBook);
     localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
 }
@@ -128,10 +135,13 @@ function addBookToLibrary() {
     let bookCover = document.createElement("button");
 
     addBookToList();
-    styleBookCover(bookCover);
-    addCoverToDOM(bookDiv, bookCover);
-    addClickEvent(bookDiv);
-    resizeShelf();
+    if (sortBy === "dateAdded") {
+        styleBookCover(bookCover);
+        addCoverToDOM(bookDiv, bookCover);
+        addClickEvent(bookDiv);
+        resizeShelf();
+    }
+    else sortBooks();
 }
 
 function blurAndBlock() {
@@ -241,4 +251,31 @@ document.getElementById("exit-warning-btn").addEventListener("click", e => {
 document.getElementById("clear-confirm-btn").addEventListener("click", e => {
     localStorage.clear();
     location.reload();
+});
+
+function sortABC(value) {
+    userLibrary.sort((a, b) => {
+        if(a[value] < b[value]) return -1;
+        else if (a[value] > b[value]) return 1;
+        else return 0;
+    });
+}
+
+function sortDate() {
+    userLibrary.sort((a, b) => {
+        return Date.parse(a.dateAdded) - Date.parse(b.dateAdded);
+    });
+}
+
+function sortBooks() {
+    if(sortBy === "dateAdded") sortDate();
+    else sortABC(sortBy);
+    localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
+    localStorage.setItem("sortBy", sortBy);
+    location.reload();
+}
+
+document.getElementById("sort").addEventListener("change", e => {
+    sortBy = e.target.value;
+    sortBooks();
 });

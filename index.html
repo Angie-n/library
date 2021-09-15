@@ -10,13 +10,42 @@
     <body>
         <div id="blurred-background">
             <header>
+                <h1>Library</h1>
+                <p>Keep track of your literary adventures</p>
                 <button id="clear-btn">
                     <i id="fire" class="fas fa-fire"></i>
                     <div id="candle-stick"></div>
                     <div id="candle-pan"></div>
                 </button>
-                <h1>Library</h1>
-                <p>Keep track of your literary adventures</p>
+                <button id="sort-btn">
+                    <div class="sort-book">
+                        <div id="top-book" class="sort-book-body"></div>
+                        <div class="sort-book-pages">
+                            <hr class="page-line"><hr class="page-line"><hr class="page-line">
+                        </div>
+                    </div>
+                    <div class="sort-book">
+                        <div id="middle-book" class="sort-book-body">
+                            <label for="sort">Sort</label>
+                        </div>
+                        <div class="sort-book-pages">
+                            <hr class="page-line"><hr class="page-line"><hr class="page-line">
+                        </div>
+                    </div>
+                    <div class="sort-book">
+                        <div id="bottom-book" class="sort-book-body">
+                            <select name="sort" id="sort">
+                                <option id="dateAdded" value="dateAdded">Date Added</option>
+                                <option id="title" value="title">Title</option>
+                                <option id="author" value="author">Author</option>
+                                <option id="haveRead" value="haveRead">Status</option>
+                            </select>
+                        </div>
+                        <div class="sort-book-pages">
+                            <hr class="page-line"><hr class="page-line"><hr class="page-line">
+                        </div>
+                    </div>
+                </button>
             </header>
             <main>
                 <div id="book-holder">

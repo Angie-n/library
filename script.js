@@ -1,7 +1,7 @@
 let userLibrary = [];
 let newBook;
+let bookIndex;
 let sortBy = "dateAdded";
-//localStorage.clear();
 
 function retrieveStorage() {
     if(localStorage.getItem("sortBy")) {
@@ -17,7 +17,7 @@ function retrieveStorage() {
         userLibrary.push(newBook);
         styleBookCover(bookCover);
         addCoverToDOM(bookDiv, bookCover, index);
-        addClickEvent(bookDiv);
+        addClickEvent(bookDiv, bookCover);
         resizeShelf();
     });
 }
@@ -114,8 +114,8 @@ function displayBookInfo(currentBook) {
     document.getElementById("status-info").textContent = `${currentBook.haveRead}`;
 }
 
-function addClickEvent(bookDiv) {
-    bookDiv.addEventListener("click", e => {
+function addClickEvent(bookDiv, bookCover) {
+    bookCover.addEventListener("click", e => {
         let currentBook = userLibrary[parseInt(bookDiv.getAttribute("data-arrPos"))];
         displayBookInfo(currentBook);
     })
@@ -153,7 +153,7 @@ function addBookToLibrary() {
     styleBookCover(bookCover);
     let index = userLibrary.indexOf(newBook);
     addCoverToDOM(bookDiv, bookCover, index);
-    addClickEvent(bookDiv);
+    addClickEvent(bookDiv, bookCover);
     resizeShelf();
 }
 
@@ -180,9 +180,7 @@ document.getElementById("cancel-form-btn").addEventListener("click", e => {
 document.getElementById("exit-info-btn").addEventListener("click", e => {
     stopBlurAndBlock()
     document.getElementById("book-info").style.display = "none";
-});
-
-let bookIndex; 
+}); 
 
 function findCurrentBook() {
     userLibrary.forEach((book, index) => {

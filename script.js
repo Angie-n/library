@@ -1,10 +1,7 @@
 let userLibrary = [];
 let newBook;
-let bookDivs;
-let windowLength;
-let coverLength;
-let booksPerRow;
 let sortBy = "dateAdded";
+//localStorage.clear();
 
 function retrieveStorage() {
     if(localStorage.getItem("sortBy")) {
@@ -19,7 +16,7 @@ function retrieveStorage() {
         newBook = new Book(book.title, book.author, book.numPages, book.haveRead, book.cover, book.dateAdded);
         userLibrary.push(newBook);
         styleBookCover(bookCover);
-        addCoverToDOM(bookDiv, bookCover);
+        addCoverToDOM(bookDiv, bookCover, index);
         addClickEvent(bookDiv);
         resizeShelf();
     });
@@ -90,11 +87,21 @@ function styleBookCover(bookCover) {
     }
 }
 
-function addCoverToDOM(bookDiv, bookCover) {
+function addAndUpdateArrPos(bookDiv, index) {
+    let bookDivs = document.getElementsByClassName("book-div");
+    for(let i = index; i < bookDivs.length; i++) {
+        let originalPos = parseInt(bookDivs[i].getAttribute("data-arrPos"));
+        bookDivs[i].setAttribute("data-arrPos", `${originalPos + 1}`);
+    }
+    document.querySelector("#book-holder").insertBefore(bookDiv, bookDivs[index]);
+    bookDiv.setAttribute("data-arrPos", `${index}`);
+}
+
+function addCoverToDOM(bookDiv, bookCover, index) {
     bookDiv.classList.add("book-div");
     bookCover.classList.add("book-cover");
     bookDiv.append(bookCover);
-    document.querySelector("#book-holder").insertBefore(bookDiv, document.querySelector("#add-book-div"));
+    addAndUpdateArrPos(bookDiv, index)
 }
 
 function displayBookInfo(currentBook) {
@@ -108,19 +115,26 @@ function displayBookInfo(currentBook) {
 }
 
 function addClickEvent(bookDiv) {
-    bookDiv.setAttribute("data-arrPos", `${userLibrary.length - 1}`);
-    document.getElementById("add-book-div").setAttribute("data-arrPos", `${userLibrary.length}`);
     bookDiv.addEventListener("click", e => {
         let currentBook = userLibrary[parseInt(bookDiv.getAttribute("data-arrPos"))];
         displayBookInfo(currentBook);
     })
 }
 
+function addShelfDiv(parentNode) {
+    let shelfPosDiv = document.createElement("div");
+    let shelfDiv = document.createElement("div");
+    shelfPosDiv.classList.add("book-shelf-positioning");
+    shelfDiv.classList.add("book-shelf");
+    shelfPosDiv.appendChild(shelfDiv);
+    parentNode.appendChild(shelfPosDiv);
+}
+
 function resizeShelf() {
-    bookDivs = document.getElementsByClassName("book-div");
-    windowLength = window.innerWidth * 0.9;
-    coverLength = document.getElementById("add-book-div").offsetWidth;
-    booksPerRow = Math.floor(windowLength/coverLength);
+    let bookDivs = document.getElementsByClassName("book-div");
+    let windowLength = window.innerWidth * 0.9;
+    let coverLength = document.getElementById("add-book-div").offsetWidth;
+    let booksPerRow = Math.floor(windowLength/coverLength);
     for (let i = 0; i < bookDivs.length; i++) {
         let nthPos = bookDivs[i].getAttribute("data-arrPos");
         let frAfterFb = false;
@@ -135,13 +149,12 @@ function addBookToLibrary() {
     let bookCover = document.createElement("button");
 
     addBookToList();
-    if (sortBy === "dateAdded") {
-        styleBookCover(bookCover);
-        addCoverToDOM(bookDiv, bookCover);
-        addClickEvent(bookDiv);
-        resizeShelf();
-    }
-    else sortBooks();
+    if (sortBy !== "dateAdded") sortBooks();
+    styleBookCover(bookCover);
+    let index = userLibrary.indexOf(newBook);
+    addCoverToDOM(bookDiv, bookCover, index);
+    addClickEvent(bookDiv);
+    resizeShelf();
 }
 
 function blurAndBlock() {
@@ -187,7 +200,7 @@ function deleteCurrentBook() {
     document.getElementById("book-holder").removeChild(document.getElementsByClassName("book-div")[bookIndex]);
     let bookDivs = document.getElementsByClassName("book-div");
     for (let i = bookIndex; i < bookDivs.length; i++) {
-        let currentArrPos = bookDivs[i].getAttribute("data-arrPos");
+        let currentArrPos = parseInt(bookDivs[i].getAttribute("data-arrPos"));
         bookDivs[i].setAttribute("data-arrPos", `${currentArrPos - 1}`);
     }
     localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
@@ -201,18 +214,49 @@ document.getElementById("delete-entry-btn").addEventListener("click", e => {
     document.getElementById("book-info").style.display = "none";
 })
 
-function reverseStatus() {
-    let currentBook = userLibrary[bookIndex];
+function reverseStatus(currentBook) {
     if (currentBook.haveRead === "Completed") currentBook.haveRead = "In Progress";
     else currentBook.haveRead = "Completed";
     document.getElementById("status-info").textContent = `${currentBook.haveRead}`;
     localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
 }
 
+function moveBook(currentBook) {
+    sortBooks();
+    let newIndex = userLibrary.indexOf(currentBook);
+    let bookDivs = document.getElementsByClassName("book-div");
+    let startIndex;
+    let endIndex;
+    let insertIndex;
+    if(newIndex > bookIndex) {
+        num = -1;
+        startIndex = bookIndex;
+        endIndex = newIndex;
+        insertIndex = newIndex + 1;
+    }
+    else {
+        num = 1;
+        startIndex = newIndex + 1;
+        endIndex = bookIndex + 1;
+        insertIndex = newIndex;
+    }
+    document.querySelector("#book-holder").insertBefore(bookDivs[bookIndex], bookDivs[insertIndex]);
+    bookDivs[newIndex].setAttribute("data-arrPos", `${newIndex}`);
+    for(let i = startIndex; i < endIndex; i++) {
+        let originalPos = parseInt(bookDivs[i].getAttribute("data-arrPos"));
+        bookDivs[i].setAttribute("data-arrPos", `${originalPos + num}`);
+    }
+}
+
 document.getElementById("toggle-status-btn").addEventListener("click", e => {
     findCurrentBook();
-    reverseStatus();
+    let currentBook = userLibrary[bookIndex];
+    reverseStatus(currentBook);
     changeCoverColor(document.getElementsByClassName("book-cover")[bookIndex], userLibrary[bookIndex]);
+    if(sortBy === "haveRead") {
+        moveBook(currentBook);
+        resizeShelf();
+    }
 });
 
 let form = document.getElementById("new-book-form");
@@ -224,15 +268,6 @@ form.onsubmit = (e => {
     stopBlurAndBlock();
     document.querySelector("form").style.display = "none";
 });
-
-function addShelfDiv(parentNode) {
-    let shelfPosDiv = document.createElement("div");
-    let shelfDiv = document.createElement("div");
-    shelfPosDiv.classList.add("book-shelf-positioning");
-    shelfDiv.classList.add("book-shelf");
-    shelfPosDiv.appendChild(shelfDiv);
-    parentNode.appendChild(shelfPosDiv);
-}
 
 window.addEventListener("resize", e => {
     resizeShelf();
@@ -272,10 +307,10 @@ function sortBooks() {
     else sortABC(sortBy);
     localStorage.setItem("userLibrary", JSON.stringify(userLibrary));
     localStorage.setItem("sortBy", sortBy);
-    location.reload();
 }
 
 document.getElementById("sort").addEventListener("change", e => {
     sortBy = e.target.value;
     sortBooks();
+    location.reload();
 });

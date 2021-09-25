@@ -3,6 +3,17 @@ let newBook;
 let bookIndex;
 let sortBy = "dateAdded";
 
+class Book {
+    constructor(title, author, numPages, haveRead, cover, dateAdded) {
+        this.title = title;
+        this.author = author;
+        this.numPages = numPages;
+        this.haveRead = haveRead;
+        this.cover = cover;
+        this.dateAdded = dateAdded;           
+    }
+}
+
 function retrieveStorage() {
     if(localStorage.getItem("sortBy")) {
         sortBy = localStorage.getItem("sortBy");
@@ -24,15 +35,6 @@ function retrieveStorage() {
 
 if(localStorage.getItem("userLibrary")) retrieveStorage();
 else document.getElementById("add-book-div").setAttribute("data-arrPos", "0");
-
-function Book(title, author, numPages, haveRead, cover, dateAdded) {
-    this.title = title;
-    this.author = author;
-    this.numPages = numPages;
-    this.haveRead = haveRead;
-    this.cover = cover;
-    this.dateAdded = dateAdded;
-}
 
 function addBookToList() {
     let title = document.getElementById("btitle").value;
